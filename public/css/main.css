@@ -1,0 +1,10 @@
+/*body {
+  background-image:url(/img/cat-pattern.jpg);
+  background-size: 150px 150px;
+  background-repeat: repeat;
+}*/
+
+#sidebar {
+  height: 1000px;
+  padding-top: 50px;
+}
