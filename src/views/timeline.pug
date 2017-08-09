@@ -20,9 +20,9 @@ html
 			br
 			ul
 				each post in postsList
-					li #{post.userId} wrote:
-					li=post.title
-					li=post.body
+					li #{post.user.dataValues.firstname} wrote:
+					li=post.dataValues.title
+					li=post.dataValues.body
 					li.input-field
 						i.material-icons.prefix.white-text mail_outline
 						input#icon_prefix(type="text" name="comment")

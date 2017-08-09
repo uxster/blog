@@ -121,21 +121,18 @@ app.post('/login', function(req, res){
 app.get('/timeline', function(req, res) {
 
   PostsTable.findAll({
-      include: [
-        {
-          model: users
-        }
-      ],
-      include: [
-        {
-          model: comments
-        }
-      ]
+      include: [{
+          model: UsersTable
+        }],
+      include: [{
+          model: CommentsTable
+        }]
   })
 	.then(function(allFoundPosts) {
-    // console.log(allFoundPosts[1]);
+    // console.log(allFoundPosts);
+    console.log("TEST:" + allFoundPosts[0].user.dataValues.firstname);
 		res.render('timeline', {
-			postsList: allFoundPosts
+			postsList: allFoundPosts,
 		})
 	})
 	.catch((error) => {
@@ -154,7 +151,7 @@ app.post('/timeline/new', function(req, res) {
   })
   .then(function(user){
     console.log("message posted");
-    req.session.user = user;
+    var user = req.session.user;
     res.redirect(`/users/${user.firstname}`);
   })
   .catch((error) => {
