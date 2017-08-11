@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
+const bcrypt = require('bcrypt')
 
 const app = express();
 
@@ -120,24 +121,66 @@ app.post('/login', function(req, res){
 //Timeline (list of everyone's posts)
 app.get('/timeline', function(req, res) {
 
-  PostsTable.findAll({
-      include: [{
-          model: UsersTable
-        }],
-      include: [{
-          model: CommentsTable
-        }]
-  })
-	.then(function(allFoundPosts) {
-    // console.log(allFoundPosts);
-    console.log("TEST:" + allFoundPosts[0].user.dataValues.firstname);
-		res.render('timeline', {
-			postsList: allFoundPosts,
-		})
-	})
-	.catch((error) => {
-		console.error(error);
-	});
+  var user = req.session.user;
+
+  if (user === undefined) {
+    res.redirect('/?message=' + encodeURIComponent("Please log in to view the timeline"));
+  } else {
+    UsersTable.findAll()
+    .then((users) => {
+      PostsTable.findAll({
+          include: [{
+              model: CommentsTable,
+              as: "comments"
+            }]
+      })
+    	.then((posts) => {
+        // console.log("TEST:" + allFoundPosts[0].user.dataValues.firstname);
+        // console.log("DOEI:" + posts[0].comments[0].comment);
+    		res.render('timeline', {
+          usersList: users,
+    			postsList: posts
+    		})
+    	})
+    	.catch((error) => {
+    		console.error(error);
+    	});
+    })
+  }
+
+});
+
+//Profile-page (profile information, list with own posts)
+app.get('/users/:firstname', function(req, res) {
+
+  var user = req.session.user;
+
+  if (user === undefined) {
+    res.redirect('/?message=' + encodeURIComponent("Please log in to view your profile"));
+  } else {
+    UsersTable.findAll()
+    .then((users) => {
+      PostsTable.findAll({
+          where: {
+            id: req.session.user.id
+          },
+          include: [{
+              model: CommentsTable,
+              as: "comments"
+            }]
+      })
+    	.then((posts) => {
+    		res.render('profile', {
+          usersList: users,
+    			postsList: posts,
+          user: user
+    		})
+    	})
+    	.catch((error) => {
+    		console.error(error);
+    	});
+    })
+  }
 
 });
 
@@ -160,31 +203,30 @@ app.post('/timeline/new', function(req, res) {
 
 })
 
-//Profile-page (profile information, list with own posts)
-app.get('/users/:firstname', function(req, res) {
+//add a comment
+app.post('/addComment', function(req, res) {
 
-  var user = req.session.user;
+  var user = req.session.user.firstname;
+  var postid = req.body.postId;
+  var comment = req.body.comment;
 
-  if (user === undefined) {
-    res.redirect('/?message=' + encodeURIComponent("Please log in to view your profile"));
-  } else {
-    PostsTable.findAll({
-      where: {
-        userId: req.session.user.id
-      }
+  UsersTable.findOne({
+    where: {
+      firstname: user
+    }
+  })
+  .then(function(user){
+    return user.createComment({
+      comment: comment,
+      userId: user.id,
+      postId: postid
     })
-    .then(function(allFoundPosts) {
-      res.render('profile', {
-        user: user,
-        profilePosts: allFoundPosts
-      })
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  }
+  })
+  .then(function(){
+    res.redirect('/timeline')
+  })
 
-});
+})
 
 // app.get(`/profile/${user.id}`, function(req, res) {
 //   var user = req.session.user;

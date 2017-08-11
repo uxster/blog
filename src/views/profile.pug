@@ -9,13 +9,14 @@ html
 		header
 			.navbar-fixed
 				nav
-						.nav-wrapper
-							a.brand-logo.center(href="/") Bloggings
+						.nav-wrapper.teal.darken-3
+							a.brand-logo.center(href="#") Profile
 							ul#nav-mobile.right.hide-on-med-and-down
 								li
+									a.btn(href="/timeline") Timeline
 									a.btn(href="/logout") Log out
 		.row
-			#sidebar.col.s3.amber.lighten-4
+			#sidebar.col.s3.teal.lighten-4
 				button.waves-effect.waves-light.btn.modal-trigger.center-align(href="#newpost" data-target="newpost") NEW POST
 				#newpost.modal
 					.modal-content
@@ -41,25 +42,34 @@ html
 				br
 				a.btn(href='/logout') LOG OUT
 			#posts.col.s9
-				h4 Your posts:
-				br
 				ul
-					each post in profilePosts
-						li#title=post.title
-						li#body=post.body
-						br
-						p ---
-						br
+					each post in postsList
+						each user in usersList
+							if post.userId === user.id
+								.row
+									.eachpost.card.blue-grey.darken-1
+										.card-content.white-text
+											span.card-title #{post.title}
+											p#by by #{user.firstname} #{user.lastname}
+											p #{post.body}
+											.commentBox
+												each comment in post.comments
+													each user in usersList
+														if comment.userId === user.id
+															p.comment
+																p.chip #{user.firstname} #{user.lastname} 
+																p #{comment.comment}
+												form(action='/addComment', method='POST', autocomplete='off')
+													.input-field
+														i.material-icons.prefix.white-text mail_outline
+														input#icon_prefix(type="text" name="comment")
+														label.white-text(for="icon_prefix") Leave a comment:
+														input(type="hidden" name="postId" value=post.id)
+													button.modal-action.waves-effect.waves-green.btn(type="submit" name="submit") POST
 		footer.page-footer
-			.container
-				.row
-					.col.l6.s12
-						h5.white-text Footer Content
-						p.grey-text.text-lighten-4 You can use rows and columns here to organize your footer content.
-			.footer-copyright
+			.footer-copyright.teal.darken-3
 				.container
-					p © 2014 Copyright Text
-				a.grey-text.text-lighten-4.right(href="#!") More Links
+					p © 2017 Copyright All rights reserved enzo
 		script(type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js")
 		script(src='/js/main.js')
 		script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js")

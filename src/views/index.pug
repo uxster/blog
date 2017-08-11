@@ -10,47 +10,43 @@ html
 		header
 			.navbar-fixed
 				nav
-						.nav-wrapper
+						.nav-wrapper.teal.darken-3
 							a.brand-logo.center(href="/") Bloggings
 		
 		.row.center
 			if user
-				a.btn(href="/users/" + user.username) VIEW PROFILE
-				a.btn(href="#") WRITE A POST
+				p You are currently logged in as #{user.firstname} #{user.lastname}
+				p What would you like to do?
+				a.btn(href="/users/" + user.firstname) VIEW MY PROFILE
+				a.btn(href="/timeline") GO TO TIMELINE
 				a.btn(href="/logout") LOG OUT
 			else
 				
-				.container.red.darken-4.col.s6.offset-s3
-					p.white-text LOG IN
+				.container.col.s6.offset-s3#login.z-depth-3
+					p LOG IN
 					form(action='/login', method='POST', autocomplete='off')
 						.row
 							.input-field.col.s8
-								i.material-icons.prefix.white-text mail_outline
+								i.material-icons.prefix mail_outline
 								input#icon_prefix(type="email" name="email")
-								label.white-text(for="icon_prefix") Email
+								label(for="icon_prefix") Email
 						.row
 							.input-field.col.s8
-								i.material-icons.prefix.white-text lock_outline
+								i.material-icons.prefix lock_outline
 								input#icon_prefix(type="password" name="password")
-								label.white-text(for="icon_prefix") Password
+								label(for="icon_prefix") Password
 						.row
 							button.btn.waves-effect.waves-light(type="submit" name="submit") LOGIN
 						.row
-							p.white-text Don't have an account yet? 
+							p.center-align Don't have an account yet? 
 						.row
 							a.btn.waves-effect.waves-light(href="/register") REGISTER
 						.row
 							p#errormessage #{message}
 
 		footer.page-footer
-			.container
-				.row
-					.col.l6.s12
-						h5.white-text Footer Content
-						p.grey-text.text-lighten-4 You can use rows and columns here to organize your footer content.
-			.footer-copyright
+			.footer-copyright.teal.darken-3
 				.container
-					p © 2014 Copyright Text
-				a.grey-text.text-lighten-4.right(href="#!") More Links
+					p © 2017 Copyright All rights reserved enzo
 		script(type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js")
 		script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js")
