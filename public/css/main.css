@@ -1,36 +1,32 @@
-/*body {
-  background-image:url(/img/cat-pattern.jpg);
-  background-size: 150px 150px;
-  background-repeat: repeat;
-}*/
+html {
+  font-weight: 200;
+}
 
 #sidebar {
   height: 1000px;
   padding-top: 50px;
 }
 
-/*.eachpost {
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 10px;
-}*/
-
-/*#title {
-  font-size: 20pt;
-  font-weight: bold;
-  font-style: italic;
-}
-
-#body {
-  font-size: 15pt
-}*/
-
-/*.commentBox {
-  background-color: white;
-}*/
-
 #login {
   margin-top: 50px;
   margin-bottom: 50px;
   background-color: white;
+}
+
+#by {
+  font-size: 10pt;
+  font-style: italic;
+}
+
+.comment p {
+  display: inline;
+  padding-left: 20px;
+}
+
+#chip {
+  height: 32px;
+}
+
+p {
+  font-weight: 300;
 }

@@ -26,21 +26,24 @@ html
 									.card-content.white-text
 										span.card-title #{post.title}
 										p#by by #{user.firstname} #{user.lastname}
-										p #{post.body}
+										blockquote #{post.body}
+										br
 										.commentBox.card-action
 											each comment in post.comments
 												each user in usersList
 													if comment.userId === user.id
-														p.comment
-															p.chip #{user.firstname} #{user.lastname} 
+														.comment
+															p.chip#chip #{user.firstname} #{user.lastname} 
 															p #{comment.comment}
+											br
 											form(action='/addComment', method='POST', autocomplete='off')
-												.input-field
-													i.material-icons.prefix.white-text mail_outline
-													input#icon_prefix(type="text" name="comment")
-													label.white-text(for="icon_prefix") Leave a comment:
-													input(type="hidden" name="postId" value=post.id)
-												button.modal-action.waves-effect.waves-green.btn(type="submit" name="submit") POST			
+												.row
+													.input-field.col.s9
+														i.material-icons.prefix.white-text mail_outline
+														input#icon_prefix(type="text" name="comment")
+														label.white-text(for="icon_prefix") Leave a comment:
+														input(type="hidden" name="postId" value=post.id)
+													button.modal-action.waves-effect.waves-green.btn.col.s3(type="submit" name="submit") POST			
 		footer.page-footer
 			.footer-copyright.teal.darken-3
 				.container

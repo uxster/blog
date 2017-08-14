@@ -162,7 +162,7 @@ app.get('/users/:firstname', function(req, res) {
     .then((users) => {
       PostsTable.findAll({
           where: {
-            id: req.session.user.id
+            userId: req.session.user.id
           },
           include: [{
               model: CommentsTable,
@@ -233,6 +233,23 @@ app.post('/addComment', function(req, res) {
 // 	res.render('example');
 // });
 // encodeURIComponent
+
+app.get('/deletePost/:id', (req, res) => {
+  var idPost = req.params.id;
+
+  PostsTable.destroy({
+    where: {
+      id: idPost
+    }
+  })
+  .then(() => {
+    res.redirect('/timeline')
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
+})
 
 app.get('/logout', (req, res) => {
     req.session.destroy((error) => {
