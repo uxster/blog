@@ -173,6 +173,7 @@ app.get('/logout', (req, res) => {
 })
 
 //--------------------------------------POST--------------------------------------
+//signing up
 app.post('/signup', function(req, res) {
 
     bcrypt.hash(req.body.password, 10)
@@ -183,14 +184,14 @@ app.post('/signup', function(req, res) {
         email: req.body.email,
         password: hash
       })
+      .then((user)=>{
+        req.session.user = user;
+        res.redirect('/users/' + user.firstname)
+      })
     })
-    .then((user) => {
-			req.session.user = user;
-      res.redirect('/users/' + user.firstname);
-		})
-		.catch((error) => {
-			console.error(error);
-		});
+    .catch((error) => {
+      console.error(error);
+    });
 
 });
 
@@ -208,8 +209,9 @@ app.post('/login', function(req, res){
   .then(function(user){
     hash = user.password;
 
-    bcrypt.compare(pw, hash).then((res) => {
-      if(res === true) {
+    bcrypt.compare(pw, hash).then((result) => {
+      if(result === true) {
+        req.session.user = user;
         res.redirect('/timeline')
       } else {
         res.redirect('/?message=' + encodeURIComponent('Invalid email or password!'))
