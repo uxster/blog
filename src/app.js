@@ -223,12 +223,30 @@ app.post('/login', function(req, res){
     res.redirect('/?message=' + encodeURIComponent('Invalid email or password!'));
   });
 
-  // if(bcrypt.compare(pw, hash).then((res) => {return res;})) {
-  //   res.redirect('/timeline');
-  // } else {
-  //   res.redirect('/?message=' + encodeURIComponent('Invalid email or password!'));
-  // }
 
+})
+
+//edit post
+app.post('/edit/:id', function (req, res) {
+  let id = req.params.id;
+  const user = req.session.user;
+  const firstname = req.body.firstname;
+  const lastname = req.body.lastname;
+  const email = req.body.email;
+
+  UsersTable.update({
+    id: id,
+    firstname: firstname,
+    lastname: lastname,
+    email: email,
+  }, {
+    where: {
+      id: id
+    }
+  })
+  .then(() => {
+    res.redirect('/users/' + user.firstname)
+  })
 })
 
 //new post
