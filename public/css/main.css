@@ -31,10 +31,6 @@ p {
   font-weight: 300;
 }
 
-#errormessage {
-  color: red;
-}
-
 #height {
   height: 500px;
   margin-top: 50px;
