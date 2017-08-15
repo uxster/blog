@@ -1,10 +1,11 @@
-//node_modules config
+const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt')
-const express = require('express');
+
 const app = express();
+
 const sequelize = new Sequelize('blog_application', process.env.POSTGRES_USER, null, {
   host: 'localhost',
   dialect: 'postgres'
@@ -23,7 +24,7 @@ app.use(session({
   resave: false
 }));
 
-//--------------------------------------MODEL DEFINITION--------------------------------------
+//model definition
 var UsersTable = sequelize.define('users', {
 	firstname: Sequelize.STRING,
 	lastname: Sequelize.STRING,
@@ -60,9 +61,9 @@ CommentsTable.belongsTo(UsersTable);
 CommentsTable.belongsTo(PostsTable);
 
 //sync
-sequelize.sync({force: false});
+sequelize.sync();
 
-//--------------------------------------GET--------------------------------------
+//routes
 app.get('/', function(req, res) {
 	res.render('index', {
     errormessage: req.query.message,
@@ -74,6 +75,48 @@ app.get('/', function(req, res) {
 app.get('/register', function(req, res) {
 	res.render('register');
 });
+
+//signing up
+app.post('/signup', function(req, res) {
+
+		UsersTable.create({
+			firstname: req.body.firstname,
+			lastname: req.body.lastname,
+      email: req.body.email,
+      password: req.body.password
+		})
+		.then((user) => {
+			req.session.user = user;
+      res.redirect(`/users/${user.firstname}`);
+		})
+		.catch((error) => {
+			console.error(error);
+		});
+
+});
+
+//logging in
+app.post('/login', function(req, res){
+
+  UsersTable.findOne({
+    where: {
+      email: req.body.email
+    }
+  })
+  .then(function(user){
+    if(user !== undefined && req.body.password === user.password) {
+      req.session.user = user;
+      res.redirect('/timeline');
+    } else {
+      res.redirect('/?message=' + encodeURIComponent('Invalid email or password!'));
+    }
+  })
+  .catch((error) => {
+    console.error(error);
+    res.redirect('/?message=' + encodeURIComponent('Invalid email or password!'));
+  });
+
+})
 
 //Timeline (list of everyone's posts)
 app.get('/timeline', function(req, res) {
@@ -94,8 +137,7 @@ app.get('/timeline', function(req, res) {
     	.then((posts) => {
     		res.render('timeline', {
           usersList: users,
-    			postsList: posts,
-          errormessage: req.query.message
+    			postsList: posts
     		})
     	})
     	.catch((error) => {
@@ -106,7 +148,7 @@ app.get('/timeline', function(req, res) {
 
 });
 
-//profile-page
+//Profile-page (profile information, list with own posts)
 app.get('/users/:firstname', function(req, res) {
 
   var user = req.session.user;
@@ -129,8 +171,7 @@ app.get('/users/:firstname', function(req, res) {
     		res.render('profile', {
           usersList: users,
     			postsList: posts,
-          user: user,
-          errormessage: req.query.message
+          user: user
     		})
     	})
     	.catch((error) => {
@@ -141,69 +182,32 @@ app.get('/users/:firstname', function(req, res) {
 
 });
 
-//delete a post
-app.get('/deletePost/:id', (req, res) => {
-  var idPost = req.params.id;
+// app.get('/edit/:firstname', function(req, res) {
+//   let firstname = req.params.firstname
+//   res.render('')
+// })
 
-  PostsTable.destroy({
+app.post('/edit/:id', function (req, res) {
+  let id = req.params.id;
+  const user = req.session.user;
+  const firstname = req.body.firstname;
+  const lastname = req.body.lastname;
+  const email = req.body.email;
+
+  UsersTable.update({
+    id: id,
+    firstname: firstname,
+    lastname: lastname,
+    email: email,
+  }, {
     where: {
-      id: idPost
+      id: id
     }
   })
   .then(() => {
-    res.redirect('/timeline')
+    res.redirect('/users/' + user.firstname)
   })
-  .catch((error) => {
-    console.error(error);
-  });
-
-})
-
-//log out and destroy the session
-app.get('/logout', (req, res) => {
-    req.session.destroy((error) => {
-      if(error) {
-        throw error;
-      }
-    });
-
-    res.redirect('/?message=' + encodeURIComponent("Succesfully logged out"));
-})
-
-//--------------------------------------POST--------------------------------------
-//signing up
-app.post('/signup', function(req, res) {
-
-    bcrypt.hash(req.body.password, 10)
-    .then((hash) => {
-      UsersTable.create({
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        email: req.body.email,
-        password: hash
-      })
-      .then((user)=>{
-        req.session.user = user;
-        res.redirect('/users/' + user.firstname)
-      })
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-
-});
-
-//login
-app.post('/login', function(req, res){
-
-  let pw = req.body.password;
-  let email = req.body.email;
-
-  UsersTable.findOne({
-    where: {
-      email: email
-    }
-  })
+<<<<<<< HEAD
   .then(function(user){
     hash = user.password;
 
@@ -221,9 +225,11 @@ app.post('/login', function(req, res){
     res.redirect('/?message=' + encodeURIComponent('Invalid email or password!'));
   });
 
+=======
+>>>>>>> 01fd9d7c18c92bfa53012a4f3b1469be0fd26fbb
 })
 
-//new post
+//New post
 app.post('/timeline/new', function(req, res) {
 
   PostsTable.create({
@@ -234,7 +240,7 @@ app.post('/timeline/new', function(req, res) {
   .then(function(user){
     console.log("message posted");
     var user = req.session.user;
-    res.redirect('/users/' + user.firstname);
+    res.redirect(`/users/${user.firstname}`);
   })
   .catch((error) => {
   	console.error(error);
@@ -265,6 +271,39 @@ app.post('/addComment', function(req, res) {
     res.redirect('/timeline')
   })
 
+})
+
+// app.get(`/profile/${user.id}`, function(req, res) {
+//   var user = req.session.user;
+// 	res.render('example');
+// });
+// encodeURIComponent
+
+app.get('/deletePost/:id', (req, res) => {
+  var idPost = req.params.id;
+
+  PostsTable.destroy({
+    where: {
+      id: idPost
+    }
+  })
+  .then(() => {
+    res.redirect('/timeline')
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+
+})
+
+app.get('/logout', (req, res) => {
+    req.session.destroy((error) => {
+      if(error) {
+        throw error;
+      }
+    });
+
+    res.redirect('/?message=' + encodeURIComponent("Succesfully logged out"));
 })
 
 //start listening
