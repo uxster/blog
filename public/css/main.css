@@ -30,3 +30,8 @@ html {
 p {
   font-weight: 300;
 }
+
+#height {
+  height: 500px;
+  margin-top: 50px;
+}
