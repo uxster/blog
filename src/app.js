@@ -184,6 +184,33 @@ app.get('/users/:firstname', function(req, res) {
 
 });
 
+// app.get('/edit/:firstname', function(req, res) {
+//   let firstname = req.params.firstname
+//   res.render('')
+// })
+
+app.post('/edit/:id', function (req, res) {
+  let id = req.params.id;
+  const user = req.session.user;
+  const firstname = req.body.firstname;
+  const lastname = req.body.lastname;
+  const email = req.body.email;
+
+  UsersTable.update({
+    id: id,
+    firstname: firstname,
+    lastname: lastname,
+    email: email,
+  }, {
+    where: {
+      id: id
+    }
+  })
+  .then(() => {
+    res.redirect('/users/' + user.firstname)
+  })
+})
+
 //New post
 app.post('/timeline/new', function(req, res) {
 
