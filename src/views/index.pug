@@ -26,12 +26,12 @@ html
 					p LOG IN
 					form(action='/login', method='POST', autocomplete='off')
 						.row
-							.input-field.col.s8
+							.input-field.col.s8.offset-s2
 								i.material-icons.prefix mail_outline
 								input#icon_prefix(type="email" name="email")
 								label(for="icon_prefix") Email
 						.row
-							.input-field.col.s8
+							.input-field.col.s8.offset-s2(data-error="wrong" data-success="right")
 								i.material-icons.prefix lock_outline
 								input#icon_prefix(type="password" name="password")
 								label(for="icon_prefix") Password
@@ -42,7 +42,7 @@ html
 						.row
 							a.btn.waves-effect.waves-light(href="/register") REGISTER
 						.row
-							p#errormessage #{message}
+							p#errormessage.center-align #{errormessage}
 
 		footer.page-footer
 			.footer-copyright.teal.darken-3
