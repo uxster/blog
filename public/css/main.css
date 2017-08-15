@@ -30,3 +30,7 @@ html {
 p {
   font-weight: 300;
 }
+
+#errormessage {
+  color: red;
+}
