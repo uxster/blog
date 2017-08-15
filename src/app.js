@@ -135,6 +135,8 @@ app.get('/timeline', function(req, res) {
             }]
       })
     	.then((posts) => {
+        // console.log("TEST:" + allFoundPosts[0].user.dataValues.firstname);
+        // console.log("DOEI:" + posts[0].comments[0].comment);
     		res.render('timeline', {
           usersList: users,
     			postsList: posts
@@ -207,26 +209,6 @@ app.post('/edit/:id', function (req, res) {
   .then(() => {
     res.redirect('/users/' + user.firstname)
   })
-<<<<<<< HEAD
-  .then(function(user){
-    hash = user.password;
-
-    bcrypt.compare(pw, hash).then((result) => {
-      if(result === true) {
-        req.session.user = user;
-        res.redirect('/timeline')
-      } else {
-        res.redirect('/?message=' + encodeURIComponent('Invalid email or password!'))
-      }
-    })
-  })
-  .catch((error) => {
-    console.error(error);
-    res.redirect('/?message=' + encodeURIComponent('Invalid email or password!'));
-  });
-
-=======
->>>>>>> 01fd9d7c18c92bfa53012a4f3b1469be0fd26fbb
 })
 
 //New post
