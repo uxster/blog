@@ -184,11 +184,6 @@ app.get('/users/:firstname', function(req, res) {
 
 });
 
-// app.get('/edit/:firstname', function(req, res) {
-//   let firstname = req.params.firstname
-//   res.render('')
-// })
-
 app.post('/edit/:id', function (req, res) {
   let id = req.params.id;
   const user = req.session.user;
