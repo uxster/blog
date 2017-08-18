@@ -92,8 +92,6 @@ app.get('/timeline', function(req, res) {
             }]
       })
     	.then((posts) => {
-        // console.log("TEST:" + allFoundPosts[0].user.dataValues.firstname);
-        // console.log("DOEI:" + posts[0].comments[0].comment);
     		res.render('timeline', {
           usersList: users,
     			postsList: posts,

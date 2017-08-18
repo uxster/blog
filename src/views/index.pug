@@ -24,7 +24,7 @@ html
 				
 				.container.col.s6.offset-s3#login.z-depth-3
 					p LOG IN
-					form(action='/login', method='POST', autocomplete='off')
+					form(action='/login', method='POST', autocomplete='off' name="loginForm")
 						.row
 							.input-field.col.s8.offset-s2
 								i.material-icons.prefix mail_outline
@@ -36,7 +36,7 @@ html
 								input#icon_prefix(type="password" name="password")
 								label(for="icon_prefix") Password
 						.row
-							button.btn.waves-effect.waves-light(type="submit" name="submit") LOGIN
+							button#btn.btn.waves-effect.waves-light(type="submit" name="submit") LOGIN
 						.row
 							p.center-align Don't have an account yet? 
 						.row
@@ -50,3 +50,16 @@ html
 					p © 2017 Copyright All rights reserved enzo
 		script(type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js")
 		script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js")
+		script.
+			$('#btn').on('click', () => {
+				if( document.loginForm.email.value == "" ) {
+					alert( "Please provide your email!" );
+					document.loginForm.email.focus() ;
+					return false;
+				} 
+				else if( document.loginForm.password.value == "" ) {
+					alert( "Please provide your password!" );
+					document.loginForm.password.focus() ;
+					return false;
+				}
+			});
