@@ -25,13 +25,13 @@ html
 							.row
 								.input-field
 									i.material-icons.prefix short_text
-									input#icon_prefix(type="text" name="title")
+									input#icon_prefix(type="text" name="title" required)
 									label(for="icon_prefix") Title
 							br
 							.row
 								.input-field
 									i.material-icons.prefix subject
-									input#icon_prefix.materialize-textarea(type="textarea" name="body")
+									input#icon_prefix.materialize-textarea(type="textarea" name="body" required)
 									label(for="icon_prefix") Message
 							button.modal-action.waves-effect.waves-green.btn(type="submit" name="submit") POST
 				p Welcome to your profile page, #{user.firstname} #{user.lastname}

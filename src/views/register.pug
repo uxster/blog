@@ -5,7 +5,6 @@ html
 		link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
 		link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css")
 		meta(name="viewport" content="width=device-width, initial-scale=1.0")
-		script(src='/js/main.js')
 	body
 		header
 			.navbar-fixed
@@ -17,7 +16,7 @@ html
 									a.btn(href="/") BACK
 		
 		.row.center#height
-			form.col.s6.offset-s3(action='/signup', method='POST', autocomplete='off')
+			form.col.s6.offset-s3(action='/signup', method='POST', autocomplete='off' name="registerForm")
 				.row
 					.input-field.col.s12
 						i.material-icons.prefix person_outline
@@ -36,10 +35,15 @@ html
 				.row
 					.input-field.col.s12
 						i.material-icons.prefix lock_outline
-						input#icon_prefix.validate(type="password" name="password" required)
+						input#icon_prefix.validate(type="password" name="password" min="8" required)
 						label(for="icon_prefix") Password
 				.row
-					button.btn.waves-effect.waves-light(type="submit" name="submit") REGISTER
+					.input-field.col.s12
+						i.material-icons.prefix lock_outline
+						input#icon_prefix.validate(type="password" name="confirmpassword" required)
+						label(for="icon_prefix") Confirm password
+				.row
+					button#btn.btn.waves-effect.waves-light(type="submit" name="submit") REGISTER
 						i.material-icons.right send
 
 		footer.page-footer
@@ -48,3 +52,37 @@ html
 					p © 2017 Copyright All rights reserved enzo
 		script(type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js")
 		script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js")
+		script(src='/js/main.js')
+		script.
+			$('#btn').on('click', () => {
+				if( document.registerForm.firstname.value == "" ) {
+					alert( "Please provide your firstname!" );
+					document.registerForm.firstname.focus() ;
+					return false;
+				} 
+				else if( document.registerForm.lastname.value == "" ) {
+					alert( "Please provide your lastname!" );
+					document.registerForm.lastname.focus() ;
+					return false;
+				}
+				else if( document.registerForm.email.value == "" ) {
+					alert( "Please provide your email!" );
+					document.registerForm.email.focus() ;
+					return false;
+				}
+				else if( document.registerForm.password.value == "" ) {
+					alert( "Please provide your password!" );
+					document.registerForm.password.focus() ;
+					return false;
+				}
+				else if( document.registerForm.password.value.length < 8 ) {
+					alert( "Password should at least contain 8 characters!" );
+					document.registerForm.password.focus() ;
+					return false;
+				}
+				else if( document.registerForm.confirmpassword.value !== document.registerForm.password.value ) {
+					alert( "Please put in matching passwords!" );
+					document.registerForm.password.focus() ;
+					return false;
+				}
+			});
